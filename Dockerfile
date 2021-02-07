@@ -7,11 +7,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Set some Variables
 ENV TZ "America/New_York"
 ENV BRANCH "public"
-ENV INSTANCE_NAME "default"
+ENV INSTANCE_NAME "Containerized Server by T3stN3t"
 ENV GAME_PORT_1 "2456"
 ENV GAME_PORT_2 "2457"
 ENV GAME_PORT_3 "2458"
-ENV WORLD_NAME "Dedicated"
+ENV WORLD_NAME "default"
 ENV PASSWORD ""
 ENV ADDITIONAL_ARGS ""
 
