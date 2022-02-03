@@ -14,7 +14,7 @@ then
 fi
 
 # Update game
-/app/steamcmd/steamcmd.sh +login anonymous +force_install_dir /app +app_update 896660 +quit
+/app/steamcmd/steamcmd.sh +force_install_dir /app +login anonymous +app_update 896660 +quit
 
 # Move save directory
 mkdir -p /home/steamuser/.config/unity3d
@@ -28,14 +28,37 @@ ln -s /app/saves /home/steamuser/.config/unity3d/IronGate
 # Launch Game
 timeStamp=`date +%m%d%Y_%H%M`
 cd /app/
-export LD_LIBRARY_PATH=./linux64:$LD_LIBRARY_PATH
 export SteamAppId=892970
 
-if [ -z "${PASSWORD}" ]
+x=`echo "${MODDED}"|tr '[:upper:]' '[:lower:]'`
+if [ ${x} == "true" ]
 then
-	echo "Password Not Set"
-	./valheim_server.x86_64 -name "${INSTANCE_NAME}" -port ${GAME_PORT_1} -world "${WORLD_NAME}" -public 1 ${ADDITIONAL_ARGS}
+	echo "LOADING MODDED SERVER PATH!"
+	export DOORSTOP_ENABLE=TRUE
+	export DOORSTOP_INVOKE_DLL_PATH=./BepInEx/core/BepInEx.Preloader.dll
+	export DOORSTOP_CORLIB_OVERRIDE_PATH=./unstripped_corlib
+
+	export LD_LIBRARY_PATH="./doorstop_libs:$LD_LIBRARY_PATH"
+	export LD_PRELOAD="libdoorstop_x64.so:$LD_PRELOAD"
+	export LD_LIBRARY_PATH="./linux64:$LD_LIBRARY_PATH"
+
+	if [ -z "${PASSWORD}" ]
+	then
+		echo "Password Not Set"
+		./valheim_server.x86_64 -name "${INSTANCE_NAME}" -port ${GAME_PORT_1} -world "${WORLD_NAME}" -public 1 ${ADDITIONAL_ARGS}
+	else
+		echo "Password Set"
+		./valheim_server.x86_64 -name "${INSTANCE_NAME}" -port ${GAME_PORT_1} -world "${WORLD_NAME}" -password "${PASSWORD}" -public 1 ${ADDITIONAL_ARGS}
+	fi	
 else
-	echo "Password Set"
-	./valheim_server.x86_64 -name "${INSTANCE_NAME}" -port ${GAME_PORT_1} -world "${WORLD_NAME}" -password "${PASSWORD}" -public 1 ${ADDITIONAL_ARGS}
-fi
+	echo "Vanilla Server"
+	export LD_LIBRARY_PATH=./linux64:$LD_LIBRARY_PATH
+	if [ -z "${PASSWORD}" ]
+	then
+		echo "Password Not Set"
+		./valheim_server.x86_64 -name "${INSTANCE_NAME}" -port ${GAME_PORT_1} -world "${WORLD_NAME}" -public 1 ${ADDITIONAL_ARGS}
+	else
+		echo "Password Set"
+		./valheim_server.x86_64 -name "${INSTANCE_NAME}" -port ${GAME_PORT_1} -world "${WORLD_NAME}" -password "${PASSWORD}" -public 1 ${ADDITIONAL_ARGS}
+	fi
+fi	
