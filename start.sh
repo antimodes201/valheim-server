@@ -14,7 +14,12 @@ then
 fi
 
 # Update game
-/app/steamcmd/steamcmd.sh +force_install_dir /app +login anonymous +app_update 896660 +quit
+if [ ${BRANCH} == "public" ]
+then
+	/app/steamcmd/steamcmd.sh +force_install_dir /app +login anonymous +app_update 896660 +quit
+else
+	/app/steamcmd/steamcmd.sh +force_install_dir /app +login anonymous +app_update 896660 -beta ${BRANCH} +quit
+fi
 
 # Move save directory
 mkdir -p /home/steamuser/.config/unity3d
