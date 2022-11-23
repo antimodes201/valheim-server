@@ -27,6 +27,17 @@ docker run -p 2456-2458:2456-2458/udp -p 2456-2458:2456-2458/tcp -v /app/docker/
 
 ```
  
+To launch the server with a beta branch distribution use the BRANCH environment setting.  Note this must match the Steam beta branch name exactly.
+```
+docker run -p 2456-2458:2456-2458/udp -p 2456-2458:2456-2458/tcp -v /app/docker/temp-vol:/app \
+	-e INSTANCE_NAME="Server Name" \
+	-e WORLD_NAME="Save_Name" \
+	-e PASSWORD="changeme" \
+	-e BRANCH="public-test" \
+	--name valheim antimodes201/valheim-server:latest
+ 
+```
+ 
 Additional server launch arguments can be added using the ADDITIONAL_ARGS environment settings.  There are currently no listed / known ones but has been added as documentation evolves over EA.
  
 Currently exposed environmental variables and their defaul values 
